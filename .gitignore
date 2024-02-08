@@ -51,11 +51,16 @@ test/demultiplexed_fastq_gz
 #cached python files
 scripts/__pycache__/*
 
-config_361.yml
-config_499.yml
 .DS_Store
 test/QIIME_output/
 test/cluster_logs/
 test/manifest.csv
 test/total_read_counts.tsv
 test/report.RData
+config_243.yml
+config_aurea.yml
+config_combo.yml
+*.out
+logs/
+unassign_data/unassigner_species.udb
+test/unassigned_read_counts.tsv

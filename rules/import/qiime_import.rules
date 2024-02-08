@@ -2,6 +2,14 @@ rule all_qiime_import:
     input:
         TARGET_QIIME_IMPORT
 
+if config["all"]["paired_end"]:
+
+    ruleorder: get_demux_qza_paired > get_demux_qza_unpaired
+
+else:
+
+    ruleorder: get_demux_qza_unpaired > get_demux_qza_paired
+
 rule get_demux_qzv:
     input:
         QIIME_OUTPUT_DIR + "/demux.qza"
@@ -14,7 +22,7 @@ rule get_demux_qzv:
         --o-visualization {output}    
         """
 
-rule get_demux_qza:
+rule get_demux_qza_paired:
     input: 
         PROJECT_DIR + "/manifest.csv"
     output:
@@ -25,5 +33,19 @@ rule get_demux_qza:
         --type 'SampleData[PairedEndSequencesWithQuality]' \
         --input-path {input} \
         --output-path {output} \
-        --input-format PairedEndFastqManifestPhred33 
+        --input-format PairedEndFastqManifestPhred33
+        """
+
+rule get_demux_qza_unpaired:
+    input: 
+        PROJECT_DIR + "/manifest.csv"
+    output:
+        QIIME_OUTPUT_DIR + "/demux.qza"
+    shell:
+        """
+        qiime tools import \
+        --type 'SampleData[SequencesWithQuality]' \
+        --input-path {input} \
+        --output-path {output} \
+        --input-format SingleEndFastqManifestPhred33
         """

@@ -2,9 +2,10 @@ TARGET_DNABC = expand(PROJECT_DIR + "/demultiplexed_fastq_gz/{sample}_{direction
 
 TARGET_QIIME_IMPORT = [str(QIIME_OUTPUT_DIR + "/demux.qzv")]
 
-TARGET_DEMUX_STAT = [str(QIIME_OUTPUT_DIR + "/demux_stat/per-sample-fastq-counts.csv")]
+TARGET_DEMUX_STAT = [str(QIIME_OUTPUT_DIR + "/demux_stat/per-sample-fastq-counts.tsv")]
 
-TARGET_DENOISE = [str(DENOISE_DIR + "/feature_table/feature-table.tsv")]
+TARGET_DENOISE = [str(DENOISE_DIR + "/feature_table/feature-table.tsv"),
+                  str(DENOISE_DIR + "/denoise_stats/stats.tsv")]
 
 TARGET_REPSEQ = [str(DENOISE_DIR + "/representative_seq_fasta/dna-sequences.fasta")]
 
@@ -29,8 +30,13 @@ TARGET_VSEARCH = [
     str(DENOISE_DIR + "/representative_seq_fasta/vsearch/vsearch.fasta")
     ]
 
+TARGET_PICRUST2 = [
+    str(DENOISE_DIR + "/picrust_out/ko_metagenome.qzv"),
+    str(DENOISE_DIR + "/picrust_out/ko_exported/ko-feature-table.tsv")
+]
+
 TARGET_ALL = (
-    TARGET_DNABC +
+    # TARGET_DNABC +
     TARGET_QIIME_IMPORT +
     TARGET_DEMUX_STAT +
     TARGET_DENOISE +
@@ -38,7 +44,8 @@ TARGET_ALL = (
     TARGET_TAXONOMY +
     TARGET_TREE +
     TARGET_DIVERSITY +
-    TARGET_UNASSIGN #+
-    #TARGET_DADA2SP +
-    #TARGET_VSEARCH
+    TARGET_UNASSIGN +
+    TARGET_DADA2SP #+
+#    TARGET_VSEARCH +
+#    TARGET_PICRUST2
 )

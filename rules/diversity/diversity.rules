@@ -93,7 +93,7 @@ rule get_diversity:
     output:
         rarefied_table = CORE_METRIC_DIR + "/rarefied_table.qza",
         faith_pd_vector = CORE_METRIC_DIR + "/faith_pd_vector.qza",
-        observed_otus_vector = CORE_METRIC_DIR + "/observed_otus_vector.qza",
+        observed_features_vector = CORE_METRIC_DIR + "/observed_features_vector.qza",
         shannon_vector = CORE_METRIC_DIR + "/shannon_vector.qza",
         evenness_vector = CORE_METRIC_DIR + "/evenness_vector.qza",
         uu_dist_mat = CORE_METRIC_DIR + "/unweighted_unifrac_distance_matrix.qza",
@@ -117,7 +117,7 @@ rule get_diversity:
         --m-metadata-file {MAPPING_FP} \
         --o-rarefied-table {output.rarefied_table} \
         --o-faith-pd-vector {output.faith_pd_vector} \
-        --o-observed-otus-vector {output.observed_otus_vector} \
+        --o-observed-features-vector {output.observed_features_vector} \
         --o-shannon-vector {output.shannon_vector} \
         --o-evenness-vector {output.evenness_vector} \
         --o-unweighted-unifrac-distance-matrix {output.uu_dist_mat} \

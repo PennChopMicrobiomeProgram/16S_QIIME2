@@ -9,8 +9,7 @@ rule run_vsearch:
     output:
         reports = DENOISE_DIR + "/representative_seq_fasta/vsearch/vsearch_report.tsv",
         alignments = DENOISE_DIR + "/representative_seq_fasta/vsearch/vsearch.fasta"
-    threads:
-        config["vsearch"]["threads"]
+    threads: 1 #should be overridden by config.yaml
     params:
         iddef = config["vsearch"]["iddef"],
         min_id = config["vsearch"]["min_id"],

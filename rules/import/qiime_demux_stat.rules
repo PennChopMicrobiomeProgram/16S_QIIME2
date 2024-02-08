@@ -8,7 +8,7 @@ rule get_demux_stat:
     params:
         QIIME_OUTPUT_DIR + "/demux_stat"
     output:
-        per_sample_count = QIIME_OUTPUT_DIR + "/demux_stat/per-sample-fastq-counts.csv"
+        per_sample_count = QIIME_OUTPUT_DIR + "/demux_stat/per-sample-fastq-counts.tsv"
     shell:
         """
         qiime tools export \

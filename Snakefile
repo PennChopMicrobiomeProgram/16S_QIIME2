@@ -8,10 +8,12 @@ QIIME_OUTPUT_DIR = PROJECT_DIR + "/QIIME_output"
 MAPPING_FP = PROJECT_DIR + "/" + config["all"]["mapping"]
 SAMPLE_IDS = util_functions.get_sample(MAPPING_FP)
 
-trim_left_f = config["denoise"]["trim_left_f"]
-trunc_len_f = config["denoise"]["trunc_len_f"]
-trim_left_r = config["denoise"]["trim_left_r"]
-trunc_len_r = config["denoise"]["trunc_len_r"]
+# trim_left_f = config["denoise"]["trim_left_f"]
+# trunc_len_f = config["denoise"]["trunc_len_f"]
+# trim_left_r = config["denoise"]["trim_left_r"]
+# trunc_len_r = config["denoise"]["trunc_len_r"]
+trim_single = config["denoise"]["trim_single"]
+trunc_single = config["denoise"]["trunc_single"]
 
 DENOISE_DIR = (QIIME_OUTPUT_DIR + "/denoise-results")
 
@@ -31,6 +33,7 @@ include: "rules/diversity/diversity.rules"
 include: "rules/unassign/unassign.rules"
 include: "rules/dada2_species/dada2.rules"
 include: "rules/vsearch/vsearch.rules"
+include: "rules/picrust2/picrust2.rules"
 
 workdir: PROJECT_DIR
 

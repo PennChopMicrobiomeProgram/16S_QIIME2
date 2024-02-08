@@ -1,0 +1,58 @@
+rule all_picrust2:
+    input:
+       TARGET_PICRUST2
+
+rule picrust2:
+    input: 
+      feature_table = DENOISE_DIR + "/table.qza",
+      rep_seq = DENOISE_DIR + "/representative-seqs.qza"
+    threads: 1 #should be overridden by config.yaml
+    output: 
+      ko = DENOISE_DIR + "/picrust_out/ko_metagenome.qza",
+      ec = DENOISE_DIR + "/picrust_out/ec_metagenome.qza",
+      pathway = DENOISE_DIR + "/picrust_out/pathway_abundance.qza"
+    shell:
+        """
+        qiime picrust2 full-pipeline \
+        --verbose --p-threads {threads} \
+        --i-table {input.feature_table} \
+        --i-seq {input.rep_seq} \
+        --o-ko-metagenome {output.ko} \
+        --o-ec-metagenome {output.ec} \
+        --o-pathway-abundance {output.pathway}
+        """
+
+rule get_viz:
+    input: DENOISE_DIR + "/picrust_out/ko_metagenome.qza"
+    output: DENOISE_DIR + "/picrust_out/ko_metagenome.qzv"
+    shell:
+        """
+        qiime feature-table summarize \
+        --i-table {input} \
+        --o-visualization {output}
+        """
+
+
+rule get_ko_table:
+    input: DENOISE_DIR + "/picrust_out/ko_metagenome.qza"
+    params: DENOISE_DIR + "/picrust_out/ko_exported"
+    output: DENOISE_DIR + "/picrust_out/ko_exported/feature-table.biom"
+    shell:
+        """
+        qiime tools export \
+        --input-path {input} \
+        --output-path {params}
+        """
+
+rule biom_convert_pi:
+    input: DENOISE_DIR + "/picrust_out/ko_exported/feature-table.biom"
+    output: DENOISE_DIR + "/picrust_out/ko_exported/ko-feature-table.tsv"
+    shell:
+        """
+        biom convert \
+        -i {input} \
+        -o {output} \
+        --to-tsv
+        """
+
+

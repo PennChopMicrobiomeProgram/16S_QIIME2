@@ -12,8 +12,14 @@ rule run_unassign:
         DENOISE_DIR + "/representative_seq_fasta/unassigned/unassigner_output.tsv"
     shell:
         """
-        unassign \
-        --type_strain_fasta {params.unassigner_species_fp} \
-        --output_dir {params.outdir} \
-        {input}
+        if [[ -f {params.unassigner_species_fp} ]]; then
+            unassign \
+            --type_strain_fasta {params.unassigner_species_fp} \
+            --output_dir {params.outdir} \
+            {input}
+        else
+            unassign \
+            --output_dir {params.outdir} \
+            {input}
+        fi
         """

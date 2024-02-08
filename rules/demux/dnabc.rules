@@ -26,7 +26,8 @@ rule run_dnabc:
     output:
         manifest_fp = PROJECT_DIR + "/manifest.csv",
         total_reads_fp = PROJECT_DIR + "/total_read_counts.tsv",
-        demux_fastq = expand(PROJECT_DIR + "/demultiplexed_fastq/{sample}_{direction}.fastq", sample = SAMPLE_IDS, direction = ["R1", "R2"])
+        demux_fastq = expand(PROJECT_DIR + "/demultiplexed_fastq/{sample}_{direction}.fastq", sample = SAMPLE_IDS, direction = ["R1", "R2"]),
+        ua_reads_fp = PROJECT_DIR + "/unassigned_read_counts.tsv"
     run:
         if params.revcomp:
             shell("""
@@ -38,6 +39,7 @@ rule run_dnabc:
             --mismatches {params.mismatch} \
             --manifest-file {output.manifest_fp} \
             --total-reads-file {output.total_reads_fp} \
+            --unassigned-barcodes-file {output.ua_reads_fp} \
             {MAPPING_FP} {input.R1} {input.R2}
             """)
         else:
@@ -49,6 +51,7 @@ rule run_dnabc:
             --mismatches {params.mismatch} \
             --manifest-file {output.manifest_fp} \
             --total-reads-file {output.total_reads_fp} \
+            --unassigned-barcodes-file {output.ua_reads_fp} \
             {MAPPING_FP} {input.R1} {input.R2}
             """)
 

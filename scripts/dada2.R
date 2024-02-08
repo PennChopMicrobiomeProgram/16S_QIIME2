@@ -32,4 +32,4 @@ genspec_df <- genus.species %>%
 
 save.image(file = snakemake@output[["dada2_rdata"]])
 
-write_tsv(x = genspec_df, path = snakemake@output[["dada2_output"]])
+write_tsv(x = genspec_df, file = snakemake@output[["dada2_output"]])
