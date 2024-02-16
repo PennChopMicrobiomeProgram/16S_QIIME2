@@ -3,7 +3,7 @@
 #SBATCH --mem=2G
 #SBATCH -n 1
 #SBATCH --export=ALL
-#SBATCH --mail-user=userid@email
+#SBATCH --mail-user=$USER@email
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --no-requeue
 #SBATCH -t 72:00:00
