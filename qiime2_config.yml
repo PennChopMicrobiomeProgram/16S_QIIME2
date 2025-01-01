@@ -1,13 +1,12 @@
 all:
-    project_dir: "/mnt/isilon/microbiome/analysis/userid/16S_QIIME2/test"
+    project_dir: "/scr1/users/path/to/project"
     mux_dir: "multiplexed_fastq"
-    mapping: "test_mapping_file.tsv"
-    admin_email: "userid@email"
+    mapping: "mapping_table.tsv"
 
 #try revcomp if you are getting 0 reads when demultiplexing
 demux:
     mismatch: 0
-    revcomp: false
+    revcomp: true
 
 #~240 for V1V2, ~280 for V3V4
 denoise:
@@ -15,13 +14,14 @@ denoise:
     trunc_len_f: 240
     trim_left_r: 0
     trunc_len_r: 240
+    filter_taxa: "" # e.g. g__Cutibacterium, g__Anoxybacillus, f__Comamonadaceae, g__Acidovorax, g__Ralstonia
 #threads are now specificed in config.yaml
 
 taxonomy:
     classifier_fp: "/mnt/isilon/microbiome/analysis/biodata/silva/silva_138/silva-138-99-nb-classifier.qza"
 
 diversity:
-    sampling_depth: 100
+    sampling_depth: 1000
 #100 is just for testing, recommend change to 1000
 
 unassign:

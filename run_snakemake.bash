@@ -4,7 +4,7 @@
 #SBATCH -n 1
 #SBATCH --export=ALL
 #SBATCH --mail-user=$USER@chop.edu
-#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-type=END,FAIL
 #SBATCH --no-requeue
 #SBATCH -t 72:00:00
 #SBATCH --output=slurm_%x_%j.out

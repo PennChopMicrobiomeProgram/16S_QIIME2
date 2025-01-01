@@ -5,7 +5,7 @@ conda activate qiime2-2023.2
 
 set -xeuo pipefail
 
-if [[ -f config.yaml ]]; then
+if [[ ! -f config.yaml ]]; then
     echo "Must have a config.yaml to be able to run"
     exit 1
 fi

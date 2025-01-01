@@ -45,7 +45,7 @@ rule run_dada2:
         QIIME_OUTPUT_DIR + "/demux.qza"
     threads: 1 #should be overridden by config.yaml
     output:
-        feature_table = DENOISE_DIR + "/table_main.qza",
+        feature_table = DENOISE_DIR + "/table_raw.qza",
         rep_seq = DENOISE_DIR + "/representative-seqs.qza",
         stat = DENOISE_DIR + "/denoise_stats.qza"
     shell:
@@ -78,9 +78,9 @@ rule denoising_stats_export:
 
 rule filter_empty:
     input:
-        DENOISE_DIR + "/table_main.qza"
+        DENOISE_DIR + "/table_raw.qza"
     output:
-        DENOISE_DIR + "/table.qza"
+        DENOISE_DIR + "/table_filtered_empty.qza"
     shell:
         """
         qiime feature-table filter-samples \
@@ -88,3 +88,25 @@ rule filter_empty:
         --p-min-frequency 1 \
         --o-filtered-table "{output}"
         """
+
+rule filter_taxa:
+    input:
+        feature_table = DENOISE_DIR + "/table_filtered_empty.qza",
+        classification_table = DENOISE_DIR + "/taxonomy/classification.qza"
+    params:
+        taxa_to_filter = config["denoise"]["filter_taxa"]
+    output:
+        DENOISE_DIR + "/table.qza"
+    run:
+        if params.taxa_to_filter:
+            shell("""
+            qiime taxa filter-table \
+            --i-table {input.feature_table} \
+            --i-taxonomy {input.classification_table} \
+            --p-exclude "{params.taxa_to_filter}" \
+            --o-filtered-table {output}
+            """)
+        else:
+            shell("""
+            cp {input.feature_table} {output}
+            """)
