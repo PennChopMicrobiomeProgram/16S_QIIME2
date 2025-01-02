@@ -2,9 +2,22 @@ rule all_unassign:
     input:
         TARGET_UNASSIGN
 
+rule unassign-to-qza:
+    input:
+        DENOISE_DIR + "/representative_seq_fasta/dna-sequences.fasta",
+    output:
+        DENOISE_DIR + "/representative_seq_fasta/dna-sequences.qza"
+    shell:
+        """
+        qiime tools import \
+        --type 'FeatureData[Sequence]' \
+        --input-path {input} \
+        --output-path {output}
+        """
+
 rule run_unassign:
     input:
-        DENOISE_DIR + "/representative_seq_fasta/dna-sequences.fasta"
+        DENOISE_DIR + "/representative_seq_fasta/dna-sequences.qza"
     params:
         unassigner_species_fp = config["unassign"]["unassigner_species_fp"],
         outdir = DENOISE_DIR + "/representative_seq_fasta/unassigned"
@@ -13,13 +26,13 @@ rule run_unassign:
     shell:
         """
         if [[ -f {params.unassigner_species_fp} ]]; then
-            unassign \
-            --type_strain_fasta {params.unassigner_species_fp} \
-            --output_dir {params.outdir} \
-            {input}
+            qiime unassigner unassign \
+            --p-type-strain-fasta {params.unassigner_species_fp} \
+            --o-output-dir {params.outdir} \
+            --i-seqs {input}
         else
-            unassign \
-            --output_dir {params.outdir} \
-            {input}
+            qiime unassigner unassign \
+            --output-dir {params.outdir} \
+            --i-seqs {input}
         fi
         """
