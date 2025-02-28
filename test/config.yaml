@@ -1,0 +1,5 @@
+cores: 4
+printshellcmds: True
+nolock: True
+verbose: True
+configfile: "test/qiime2_config.yml"
