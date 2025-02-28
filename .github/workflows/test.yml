@@ -27,6 +27,34 @@ jobs:
                 git clone https://github.com/Ulthran/q2-unassigner.git
                 cd q2-unassigner
                 make install
+
+            - name: Write configs
+              run: |
+                echo "cores: 4" > test/config.yaml
+                echo "printshellcmds: True" >> test/config.yaml
+                echo "nolock: True" >> test/config.yaml
+                echo "verbose: True" >> test/config.yaml
+                echo "configfile: ${pwd}/test/qiime2_config.yml" >> test/config.yaml
+
+                echo "all:" > test/qiime2_config.yml
+                echo "    project_dir: ${pwd}/test" >> test/qiime2_config.yml
+                echo "    mux_dir: 'multiplexed_fastq'" >> test/qiime2_config.yml
+                echo "    mapping: 'test_mapping_file.tsv'" >> test/qiime2_config.yml
+                echo "    admin_email: 'userid@email'" >> test/qiime2_config.yml
+                echo "demux:" >> test/qiime2_config.yml
+                echo "    mismatch: 0" >> test/qiime2_config.yml
+                echo "    revcomp: false" >> test/qiime2_config.yml
+                echo "denoise:" >> test/qiime2_config.yml
+                echo "    trim_left_f: 0" >> test/qiime2_config.yml
+                echo "    trunc_len_f: 240" >> test/qiime2_config.yml
+                echo "    trim_left_r: 0" >> test/qiime2_config.yml
+                echo "    trunc_len_r: 240" >> test/qiime2_config.yml
+                echo "taxonomy:" >> test/qiime2_config.yml
+                echo "    classifier_fp: ${pwd}/test/data/test_classifier_species.qza" >> test/qiime2_config.yml
+                echo "diversity:" >> test/qiime2_config.yml
+                echo "    sampling_depth: 100" >> test/qiime2_config.yml
+                echo "unassign:" >> test/qiime2_config.yml
+                echo "    unassigner_species_fp: ${pwd}/test/data/unassigner_species.fasta" >> test/qiime2_config.yml
                 
             - name: Dryrun
               run: |

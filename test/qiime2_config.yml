@@ -1,5 +1,5 @@
 all:
-    project_dir: "test"
+    project_dir: "/home/ctbus/Penn/16S_QIIME2/test"
     mux_dir: "multiplexed_fastq"
     mapping: "test_mapping_file.tsv"
     admin_email: "userid@email"
@@ -18,14 +18,14 @@ denoise:
 #threads are now specificed in config.yaml
 
 taxonomy:
-    classifier_fp: "test/data/test_classifier_species.qza"
+    classifier_fp: "/home/ctbus/Penn/16S_QIIME2/test/data/test_classifier_species.qza"
 
 diversity:
     sampling_depth: 100
 #100 is just for testing, recommend change to 1000
 
 unassign:
-    unassigner_species_fp: "test/data/unassigner_species.fasta"
+    unassigner_species_fp: "/home/ctbus/Penn/16S_QIIME2/test/data/unassigner_species.fasta"
 
 dada2:
     rscript: "/mnt/isilon/microbiome/analysis/biodata/dada2/dada2.R"
