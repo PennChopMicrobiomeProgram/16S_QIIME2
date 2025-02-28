@@ -21,7 +21,7 @@ jobs:
 
             - name: Install dependencies
               run: |
-                conda env create -n qiime2 --file envionment.yml
+                conda env create -n qiime2 --file environment.yml
                 conda activate qiime2
                 pip install git+https://github.com/PennChopMicrobiomeProgram/dnabc.git
                 git clone https://github.com/Ulthran/q2-unassigner.git
