@@ -24,7 +24,6 @@ To run the pipeline, activate the envrionment (currently based on **QIIME2 2023.
 
 - The following software also need to be installed within the environment you created:
   - `dnabc` (https://github.com/PennChopMicrobiomeProgram/dnabc)
-  - `unassigner` (https://github.com/kylebittinger/unassigner)
 
 ## Required input files for the pipeline
 To run the pipeline, we need
@@ -137,3 +136,30 @@ NB: Currently picrust2-2021.11_0 does not work with qiime2 2023.2 but these woul
 3. `conda activate myenv`
 4. `conda env export > environment.yml`
 5. git commit / push your changes (to your own fork) and create a pull request for PennCHOPMicrobiomeProgram/16S_QIIME2
+
+## Docker
+
+### Building and running the image with Docker
+
+You can do this replacing `ctbushman` with your own DockerHub repo name so that you can actually push to DockerHub and use the image elsewhere easily.
+
+```
+cd 16S_QIIME2/
+docker build -t ctbushman/16s_qiime2:latest -f Dockerfile .
+docker run --rm -it ctbushman/16s_qiime2:latest snakemake -h
+docker push ctbushman/16s_qiime2:latest
+```
+
+### Building and running the image with Singularity
+
+This step you do once the image is on DockerHub and you want to use it on the HPC. The tmp and cache dirs we set here will help avoid errors you'll run into trying to build big images because the /tmp/ dir on the login nodes will fill up.
+
+```
+mkdir /scr1/users/bushmanc1/tmp
+mkdir /scr1/users/bushmanc1/cache
+export SINGULARITY_TMPDIR=/scr1/users/bushmanc1/tmp
+export SINGULARITY_CACHEDIR=/scr1/users/bushmanc1/cache
+
+singularity build /mnt/isilon/microbiome/analysis/software/16s_qiime2_2025.10.sif docker://ctbushman/16s_qiime2:latest
+singularity exec --bind /mnt/isilon/microbiome:/mnt/isilon/microbiome /mnt/isilon/microbiome/analysis/software/16s_qiime2_2025.10.sif snakemake --snakefile /app/Snakefile --profile /path/to/project -n
+```
