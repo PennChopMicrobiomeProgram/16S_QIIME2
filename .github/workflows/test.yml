@@ -1,0 +1,76 @@
+name: Test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: setup-conda
+              uses: s-weigand/setup-conda@v1.0.7
+              with:
+                # Additional channels like 'conda-forge' which can be used to install packages
+                conda-channels: '' # optional, default is 'defaults conda-forge'
+                # Additional packages which should be installed
+
+            - name: Install dependencies
+              run: |
+                conda create -n qiime2 --file environment.yml
+                conda run -n qiime2 pip install git+https://github.com/PennChopMicrobiomeProgram/dnabc.git
+                git clone https://github.com/Ulthran/q2-unassigner.git
+                cd q2-unassigner
+                conda run -n qiime2 make install
+
+            - name: Write configs
+              run: |
+                echo "cores: 4" > test/config.yaml
+                echo "printshellcmds: True" >> test/config.yaml
+                echo "nolock: True" >> test/config.yaml
+                echo "verbose: True" >> test/config.yaml
+                echo "configfile: ${PWD}/test/qiime2_config.yml" >> test/config.yaml
+
+                echo "all:" > test/qiime2_config.yml
+                echo "    project_dir: ${PWD}/test" >> test/qiime2_config.yml
+                echo "    mux_dir: 'multiplexed_fastq'" >> test/qiime2_config.yml
+                echo "    mapping: 'test_mapping_file.tsv'" >> test/qiime2_config.yml
+                echo "    admin_email: 'userid@email'" >> test/qiime2_config.yml
+                echo "demux:" >> test/qiime2_config.yml
+                echo "    mismatch: 0" >> test/qiime2_config.yml
+                echo "    revcomp: false" >> test/qiime2_config.yml
+                echo "denoise:" >> test/qiime2_config.yml
+                echo "    trim_left_f: 0" >> test/qiime2_config.yml
+                echo "    trunc_len_f: 240" >> test/qiime2_config.yml
+                echo "    trim_left_r: 0" >> test/qiime2_config.yml
+                echo "    trunc_len_r: 240" >> test/qiime2_config.yml
+                echo "taxonomy:" >> test/qiime2_config.yml
+                echo "    classifier_fp: ${PWD}/test/data/test_classifier_species.qza" >> test/qiime2_config.yml
+                echo "diversity:" >> test/qiime2_config.yml
+                echo "    sampling_depth: 100" >> test/qiime2_config.yml
+                echo "unassign:" >> test/qiime2_config.yml
+                echo "    unassigner_species_fp: ${PWD}/test/data/unassigner_species.fasta" >> test/qiime2_config.yml
+                echo "dada2:" >> test/qiime2_config.yml
+                echo "    rscript: ${PWD}/scripts/dada2.R" >> test/qiime2_config.yml
+                echo "    species_training_set: ''" >> test/qiime2_config.yml
+                echo "vsearch:" >> test/qiime2_config.yml
+                echo "    db: ''" >> test/qiime2_config.yml
+                echo "    min_id: 0.97" >> test/qiime2_config.yml
+                echo "    weak_id: 0.97" >> test/qiime2_config.yml
+                echo "    userfields: 'query+target+id2+alnlen+mism+gaps+qilo+qihi+tilo+tihi+qs+ts+qrow+trow'" >> test/qiime2_config.yml
+                echo "    iddef: 2" >> test/qiime2_config.yml
+                echo "    fasta_width: 0" >> test/qiime2_config.yml
+                echo "    maxaccepts: 1" >> test/qiime2_config.yml
+
+                cat test/qiime2_config.yml
+                cat test/config.yaml
+                
+            - name: Dryrun
+              run: conda run -n qiime2 snakemake -n --profile test
+
+            - name: Run
+              run: conda run -n qiime2 snakemake --profile test

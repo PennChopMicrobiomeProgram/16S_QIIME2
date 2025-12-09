@@ -33,7 +33,7 @@ rule run_dnabc:
             shell("""
             mkdir -p {params.demux_dir}
             touch {output.demux_fastq}
-            dnabc.py \
+            dnabc \
             --revcomp \
             --output-dir {params.demux_dir} \
             --mismatches {params.mismatch} \
@@ -46,7 +46,7 @@ rule run_dnabc:
             shell("""
             mkdir -p {params.demux_dir}
             touch {output.demux_fastq}
-            dnabc.py \
+            dnabc \
             --output-dir {params.demux_dir} \
             --mismatches {params.mismatch} \
             --manifest-file {output.manifest_fp} \

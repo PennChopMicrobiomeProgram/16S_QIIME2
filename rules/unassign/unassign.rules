@@ -1,25 +1,41 @@
+
+
+
+
 rule all_unassign:
     input:
         TARGET_UNASSIGN
 
+
 rule run_unassign:
     input:
-        DENOISE_DIR + "/representative_seq_fasta/dna-sequences.fasta"
+        DENOISE_DIR + "/representative-seqs.qza"
     params:
-        unassigner_species_fp = config["unassign"]["unassigner_species_fp"],
-        outdir = DENOISE_DIR + "/representative_seq_fasta/unassigned"
+        unassigner_species_fp=config["unassign"]["unassigner_species_fp"],
+    output:
+        DENOISE_DIR + "/representative_seq_fasta/unassigned.qza"
+    shell:
+        """
+        if [[ -f {params.unassigner_species_fp} ]]; then
+            qiime unassigner unassign \
+            --p-type-strain-fasta {params.unassigner_species_fp} \
+            --o-unassigned {output} \
+            --i-seqs {input}
+        else
+            qiime unassigner unassign \
+            --o-unassigned {output} \
+            --i-seqs {input}
+        fi   
+        """
+
+
+rule export_unassigner:
+    input:
+        DENOISE_DIR + "/representative_seq_fasta/unassigned.qza"
     output:
         DENOISE_DIR + "/representative_seq_fasta/unassigned/unassigner_output.tsv"
     shell:
         """
-        if [[ -f {params.unassigner_species_fp} ]]; then
-            unassign \
-            --type_strain_fasta {params.unassigner_species_fp} \
-            --output_dir {params.outdir} \
-            {input}
-        else
-            unassign \
-            --output_dir {params.outdir} \
-            {input}
-        fi
-        """
+        qiime tools export \
+        --input-path {input} \
+        --output-path $(dirname {output})    """
