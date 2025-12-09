@@ -7,6 +7,11 @@ To install, we assume you already have installed `Miniconda3 (4.7.10+)` (https:/
 ```bash
 git clone https://github.com/PennChopMicrobiomeProgram/16S_QIIME2.git
 ```
+
+### 2025 10 process
+See the updated qiime docs here: https://library.qiime2.org/quickstart/amplicon
+
+### 2023 02 process
 - Create a conda environment:
 ```bash
 cd 16S_QIIME2
